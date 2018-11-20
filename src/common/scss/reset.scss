@@ -1,0 +1,105 @@
+body,
+p,
+dd,
+dl,
+form,
+h1,
+h2,
+h3,
+h4,
+figure,
+pre,
+form,
+select {
+  margin: 0;
+}
+ul,
+ol,
+th,
+td,
+input,
+textarea {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+}
+h1,
+h2,
+h3,
+h4,
+b,
+strong {
+  font-weight: normal;
+}
+i,
+em {
+  font-style: normal;
+}
+a,
+s {
+  color: inherit;
+  outline: 0 none;
+  text-decoration: none;
+}
+img {
+  border: 0 none;
+  vertical-align: top;
+}
+pre {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+button,
+input {
+  outline: 0 none;
+  border: 0 none;
+  border-radius: 0;
+  appearance: none;
+}
+textarea {
+  resize: none;
+  outline: 0 none;
+  overflow: auto;
+}
+table {
+  table-layout: fixed;
+  word-break: break-all;
+  word-wrap: break-word;
+  border-collapse: collapse;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.clear {
+  *zoom: 1;
+}
+.clear:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+body,
+button,
+input,
+textarea {
+  /* 纠正表单元素字体不按预设渲染，移动端首推Helvetica */
+  font-family: 'Microsoft YaHei', Helvetica, Arial, sans-serif;
+}
+html,
+body {
+  /* 解决iOS10+body设置overflow: hidden失效问题 */
+  position: relative;
+  width: 100%;
+  line-height: 1;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: none;
+  background: #fff;
+}
+html * {
+  -webkit-tap-highlight-color: transparent;
+}

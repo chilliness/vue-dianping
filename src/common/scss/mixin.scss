@@ -1,0 +1,30 @@
+$fswhite: #fff;
+$fs333: #333;
+$fs666: #666;
+$fs999: #999;
+$fsf33: #f3394e;
+
+$bdwhite: #fff;
+$bdeee: #eee;
+
+$bgwhite: #fff;
+$bgeee: #eee;
+$bgf33: #f3394e;
+$bgff3: #ff355d;
+
+@mixin frow($justify-content: center, $align-items: center) {
+  display: flex;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+@mixin fcol($justify-content: center, $align-items: center) {
+  @include frow($justify-content, $align-items);
+  flex-direction: column;
+}
+
+@mixin dot() {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
