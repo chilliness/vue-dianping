@@ -1,23 +1,23 @@
 <template>
   <div class="cart-wrap">
-    <Header title="购物车" :btn="_btn" @handlerClick="isEdit = !isEdit"></Header>
+    <Header title="购物车" :btn="_btn" @handleClick="isEdit = !isEdit"></Header>
     <!-- 主体内容 -->
     <template v-if="_list.length">
-      <Scroll class="scroll" :data="_list">
+      <Scroll isBottom :data="_list">
         <Item3 :list="_list"></Item3>
       </Scroll>
       <div class="balance-box" v-if="_list.length">
-        <div class="left" @click="$store.commit('$handlerToggleChecked', {checked: +!_allChecked})">
+        <div class="left" @click="$store.commit('$handleToggleChecked', {checked: +!_allChecked})">
           <div class="check-box">
             <div class="btn-check" :class="{on: _allChecked}"></div>
           </div>
           <div class="text">全选</div>
         </div>
         <div class="total" v-if="!isEdit">{{'合计: ￥' + _totalMoney}}</div>
-        <div class="btn-handler" :class="{enable: _totalMoney > 0}" @click="handlerClick">{{isEdit ? '删除' : '去结算'}}</div>
+        <div class="btn-handle" :class="{enable: _totalMoney > 0}" @click="handleClick">{{isEdit ? '删除' : '去结算'}}</div>
       </div>
     </template>
-    <div class="tips" v-else>快去选购你喜欢的商品吧</div>
+    <div class="nothing-box" v-else>快去选购你喜欢的商品吧</div>
   </div>
 </template>
 
@@ -27,6 +27,7 @@ import Item3 from '@/components/item3';
 
 export default {
   name: 'Cart',
+  components: { Header, Item3 },
   data() {
     return { isEdit: false };
   },
@@ -54,35 +55,26 @@ export default {
     }
   },
   methods: {
-    handlerClick() {
+    handleClick() {
       if (this._totalMoney > 0) {
         if (this.isEdit) {
           return this.$confirm({
             msg: '你确定要删除选中项？',
-            confirm: () => this.$store.commit('$handlerDelCart')
+            confirm: () => this.$store.commit('$handleDelCart')
           });
         }
-        this.$store.commit('$handlerDelCart');
-        this.$router.push({ name: 'payment' });
+        this.$router.push({ name: 'payment', params: { from: 'cart' } });
       }
     }
-  },
-  components: { Header, Item3 }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .cart-wrap {
-  .scroll {
-    bottom: 50px;
-  }
-  .tips {
-    @include frow();
-    height: 100px;
-    margin-top: 50px;
-    font-size: 14px;
-    color: $fs333;
-  }
+  height: 100vh;
+  font-size: 14px;
+  color: $fs333;
   .balance-box {
     position: fixed;
     left: 0;
@@ -128,7 +120,7 @@ export default {
         }
       }
     }
-    .btn-handler {
+    .btn-handle {
       @include frow();
       width: 100px;
       height: 100%;
@@ -138,6 +130,10 @@ export default {
         background: $bgf33;
       }
     }
+  }
+  .nothing-box {
+    @include frow();
+    height: 100px;
   }
 }
 </style>

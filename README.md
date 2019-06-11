@@ -1,11 +1,5 @@
 ## 仿大众点评
 
-``` bash
-A Vue.js project
-
-本项目是基于vue 2.x制作的，如果喜欢本项目，欢迎star
-```
-
 > 亮点
 
 ``` bash
@@ -23,13 +17,11 @@ A Vue.js project
 > 注意事项
 
 ``` bash
-1、本实例是用vue-cli提供的webpack模板构建
+1、CSS代码使用了Scss编写
 
-2、CSS代码使用了Sass编写
+2、页面滚动使用better-scroll插件
 
-3、页面滚动使用better-scroll插件
-
-4、本地存储使用good-storage插件
+3、本地存储使用good-storage插件
 ```
 
 > 功能实现
@@ -62,18 +54,27 @@ A Vue.js project
 13、收藏列表删除功能（需登录）
 ```
 
-## Build Setup
-
-``` bash
-# install dependencies
+## Project setup
+```
 npm install
+```
 
-# serve with hot reload at localhost:8080
-npm run dev
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-# build for production with minification
+### Compiles and minifies for production
+```
 npm run build
+```
 
-# build for production and view the bundle analyzer report
-npm run build --report
+### Run your tests
+```
+npm run test
+```
+
+### Lints and fixes files
+```
+npm run lint
 ```

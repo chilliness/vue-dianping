@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-wrap" ref="scroll">
+  <div class="scroll-wrap" :class="{bottom: isBottom}" ref="scrollBox">
     <div>
       <slot></slot>
       <div class="loading-bar" v-if="pullUpLoad">
@@ -19,6 +19,7 @@ import Loading from '@/components/loading';
 
 export default {
   name: 'Scroll',
+  components: { Loading },
   props: {
     data: {
       type: Array,
@@ -34,10 +35,6 @@ export default {
       type: Number,
       default: 3
     },
-    bufferTime: {
-      type: Number,
-      default: 20
-    },
     observeDom: {
       type: Boolean,
       default: false
@@ -50,18 +47,26 @@ export default {
       type: [Boolean, Object],
       default: false
     },
+    delay: {
+      type: Number,
+      default: 20
+    },
     isHasMore: {
       type: Boolean,
       default: true
+    },
+    isBottom: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
-    this.handlerInitScroll();
+    this.handleInitScroll();
   },
   methods: {
-    handlerInitScroll() {
+    handleInitScroll() {
       if (!this.scroll) {
-        this.scroll = new this.$BScroll(this.$refs.scroll, {
+        this.scroll = new this.$BScroll(this.$refs.scrollBox, {
           click: this.click,
           probeType: this.probeType,
           observeDom: this.observeDom,
@@ -71,42 +76,51 @@ export default {
 
         this.scroll.on('scroll', pos => this.$emit('scroll', pos));
 
-        this.pullDownRefresh &&
+        if (this.pullDownRefresh) {
           this.scroll.on('pullingDown', () => this.$emit('refresh'));
+        }
 
-        this.pullUpLoad &&
+        if (this.pullUpLoad) {
           this.scroll.on('pullingUp', () => this.$emit('load'));
+        }
       } else {
         this.scroll.refresh();
       }
+    },
+    handleScrollTo() {
+      this.scroll && this.scroll.scrollTo(0, 0, 100);
+    },
+    handleFinshPullUp() {
+      this.scroll && this.scroll.finishPullUp();
+    },
+    handleRefresh() {
+      this.handleFinshPullUp();
+      this.scroll && this.scroll.refresh();
     }
   },
   watch: {
-    data: {
-      handler() {
-        this.timer = setTimeout(() => {
-          this.pullUpLoad && this.scroll.finishPullUp();
-          this.pullDownRefresh && this.scroll.finishPullDown();
-          this.scroll.refresh();
-          clearTimeout(this.timer);
-        }, this.bufferTime);
-      },
-      immediate: true,
-      deep: true
+    data(val, oldVal) {
+      clearTimeout(this.timerRefresh);
+      this.timerRefresh = setTimeout(() => {
+        clearTimeout(this.timerRefresh);
+        this.handleRefresh();
+      }, this.delay);
     }
-  },
-  components: { Loading }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .scroll-wrap {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 50px;
   right: 0;
   bottom: 0;
   overflow: hidden;
+  &.bottom {
+    bottom: 50px;
+  }
   .loading-bar {
     height: 50px;
     font-size: 14px;

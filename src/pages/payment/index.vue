@@ -1,16 +1,16 @@
 <template>
   <div class="payment-wrap">
     <Header title="支付页面"></Header>
-    <scroll :class="{bottom: isShow}" :date="['vue']" @click.native="isShow = !isShow">
+    <Scroll :class="{bottom: isShow}" :data="_keyboard" @click.native="isShow = !isShow">
       <div class="password-box">
         <div class="list-box">
           <div class="item-box" v-for="(item, index) in password" :key="index">●</div>
         </div>
-        <div class="tips">{{'默认支付密码为' + text}}</div>
+        <div class="tip-box">{{'默认支付密码为' + text}}</div>
       </div>
-    </scroll>
+    </Scroll>
     <div class="keyboard-box" v-if="isShow" @click.stop>
-      <div class="item-box" :class="{disabled: item === ''}" v-for="(item, index) in _keyboard" :key="index" @click="handlerInput(item)">{{item}}</div>
+      <div class="item-box" :class="{disabled: item === ''}" v-for="(item, index) in _keyboard" :key="index" @click="handleInput(item)">{{item}}</div>
     </div>
   </div>
 </template>
@@ -20,6 +20,7 @@ import Header from '@/components/header';
 
 export default {
   name: 'Payment',
+  components: { Header },
   data() {
     return {
       password: [],
@@ -31,7 +32,7 @@ export default {
   computed: {
     _keyboard() {
       if (this.isSort) {
-        let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].sort(
+        let arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].sort(
           () => Math.random() - 0.5
         );
         let arr2 = ['', arr.pop(), '删除'];
@@ -41,7 +42,7 @@ export default {
     }
   },
   methods: {
-    handlerInput(item) {
+    handleInput(item) {
       if (!['', '删除'].includes(item) && this.password.length < 4) {
         return this.password.push(item);
       }
@@ -51,30 +52,34 @@ export default {
     }
   },
   watch: {
-    password: {
-      handler(val) {
-        if (val.length === 4) {
-          if (val.join('') === this.text) {
-            this.isShow = false;
-            this.$toast({
-              msg: '密码正确，正在为你生成订单',
-              callback: () => this.$router.push({ name: 'home' })
-            });
-          } else {
-            this.$toast({ msg: '密码错误' });
-          }
+    password(val) {
+      if (val.length === 4) {
+        if (val.join('') === this.text) {
+          this.isShow = false;
+          this.$toast({
+            msg: '密码正确，正在为你生成订单',
+            callback: () => {
+              if (this.$route.params.from === 'cart') {
+                this.$store.commit('$handleDelCart');
+              }
+              this.$router.push({ name: 'home' });
+            }
+          });
+        } else {
+          this.$toast({
+            msg: '密码错误',
+            callback: () => (this.password = [])
+          });
         }
-      },
-      immediate: true,
-      deep: true
+      }
     }
-  },
-  components: { Header }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .payment-wrap {
+  height: 100vh;
   font-size: 14px;
   color: $fs333;
   .bottom {
@@ -115,7 +120,7 @@ export default {
         height: 100%;
       }
     }
-    .tips {
+    .tip-box {
       text-align: center;
       padding: 15px;
     }

@@ -3,7 +3,7 @@
     <ul class="list-box">
       <li class="item-box" v-for="(item, index) in list" :key="index" @click="$router.push({name: 'detail', params: {id: item.id}})">
         <div class="check-box" @click.stop>
-          <div class="btn-check" :class="{on: item.checked}" @click="handlerToggleChecked(item)"></div>
+          <div class="btn-check" :class="{on: item.checked}" @click="handleToggleChecked(item)"></div>
         </div>
         <div class="img-box">
           <img class="img" :src="item.imgUrl" :alt="item.name">
@@ -15,11 +15,11 @@
           </div>
           <div class="price">{{'￥' + item.price + '/份'}}</div>
           <div class="btn-box">
-            <span class="btn btn-sub" @click.stop="handlerToggleNum({goods: item, type: 'sub'})">
+            <span class="btn btn-sub" @click.stop="handleToggleNum({goods: item, type: 'sub'})">
               <i class="iconfont icon-sub"></i>
             </span>
             <span class="num">{{item.cartNum}}</span>
-            <span class="btn btn-add" @click.stop="handlerToggleNum({goods: item, type: 'add'})">
+            <span class="btn btn-add" @click.stop="handleToggleNum({goods: item, type: 'add'})">
               <i class="iconfont icon-add"></i>
             </span>
           </div>
@@ -34,6 +34,7 @@ import Star from '@/components/star';
 
 export default {
   name: 'Item3',
+  components: { Star },
   props: {
     list: {
       type: Array,
@@ -43,24 +44,23 @@ export default {
     }
   },
   methods: {
-    handlerToggleNum(obj) {
+    handleToggleNum(obj) {
       if (obj.type === 'sub' && obj.goods.cartNum < 2) {
         return this.$confirm({
           msg: '你确定要删除该商品吗？',
-          confirm: () => this.$store.commit('$handlerCart', obj)
+          confirm: () => this.$store.commit('$handleCart', obj)
         });
       }
-      this.$store.commit('$handlerCart', obj);
+      this.$store.commit('$handleCart', obj);
     },
-    handlerToggleChecked(goods) {
-      this.$store.commit('$handlerToggleChecked', {
+    handleToggleChecked(goods) {
+      this.$store.commit('$handleToggleChecked', {
         goods,
         // +的作用是隐式类型转换
         checked: +!goods.checked
       });
     }
-  },
-  components: { Star }
+  }
 };
 </script>
 
@@ -129,7 +129,7 @@ export default {
             width: 25px;
             height: 25px;
             .iconfont {
-              color: $fs666;
+              color: $fs999;
               font-size: 24px;
             }
           }

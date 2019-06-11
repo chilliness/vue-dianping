@@ -1,4 +1,5 @@
 export default {
-  list: 'https://easy-mock.com/mock/5bd7d0d142fd7173b938fd68/dianping/list',
+  msg: '网络故障，请稍候再试',
+  list: 'https://www.easy-mock.com/mock/5cbe8175436fed5d8c6d622c/dzdp/list',
   user: 'https://uinames.com/api/?ext'
 };

@@ -1,11 +1,11 @@
 <template>
-  <div class="confirm-wrap" v-if="isShow">
+  <div class="confirm-wrap" v-if="msg">
     <div class="box">
       <div class="title">{{title}}</div>
       <div class="text">{{msg}}</div>
       <div class="btn-box">
-        <div class="btn-cancel" @click="handlerClose('cancel')">{{cancelText}}</div>
-        <div class="btn-confirm" @click="handlerClose('confirm')">{{confirmText}}</div>
+        <div class="btn-cancel" @click="handleClose('cancel')">{{cancelText}}</div>
+        <div class="btn-confirm" @click="handleClose('confirm')">{{confirmText}}</div>
       </div>
     </div>
   </div>
@@ -24,6 +24,7 @@ export default {
   top: 0;
   right: 0;
   bottom: 0;
+  z-index: 999;
   @include frow();
   .box {
     width: 240px;

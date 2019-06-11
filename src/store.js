@@ -13,20 +13,18 @@ export default new Vuex.Store({
     cartList: session.get('cartList', [])
   },
   mutations: {
-    $handlerAddress(state, address) {
+    $handleAddress(state, address) {
       state.nowAddress = session.set('nowAddress', address);
     },
-    $handlerLogin(state, obj) {
+    $handleLogin(state, obj) {
       state.isLogin = session.set('isLogin', obj.isLogin);
       state.userInfo = session.set('userInfo', obj.userInfo);
     },
-    $handlerCollect(state, goods) {
-      let list = state.collectList.find(item => item.id === goods.id)
-        ? state.collectList.filter(item => item.id !== goods.id)
-        : [goods, ...state.collectList];
+    $handleCollect(state, goods) {
+      let list = state.collectList.find(item => item.id === goods.id) ? state.collectList.filter(item => item.id !== goods.id) : [goods, ...state.collectList];
       state.collectList = session.set('collectList', list);
     },
-    $handlerCart(state, { goods, type = 'add' }) {
+    $handleCart(state, { goods, type = 'add' }) {
       let list = state.cartList;
       let obj = list.find(item => item.id === goods.id) || goods;
 
@@ -50,7 +48,7 @@ export default new Vuex.Store({
       }
       state.cartList = session.set('cartList', list);
     },
-    $handlerToggleChecked(state, { goods = 'all', checked }) {
+    $handleToggleChecked(state, { goods = 'all', checked }) {
       state.cartList = session.set(
         'cartList',
         state.cartList.map(item => {
@@ -65,11 +63,8 @@ export default new Vuex.Store({
         })
       );
     },
-    $handlerDelCart(state) {
-      state.cartList = session.set(
-        'cartList',
-        state.cartList.filter(item => !item.checked)
-      );
+    $handleDelCart(state) {
+      state.cartList = session.set('cartList', state.cartList.filter(item => !item.checked));
     }
   }
 });

@@ -1,13 +1,13 @@
 <template>
   <div class="mine-wrap">
     <Header title="个人中心"></Header>
-    <scroll class="bottom" :data="['vue']">
+    <scroll isBottom :data="[_user]">
       <div class="user-box">
         <div class="avatar-box">
           <img class="avatar" :src="_user.avatar" alt="头像">
         </div>
         <div class="name">{{_user.name}}</div>
-        <div class="btn-logout" @click="handlerLogout">退出</div>
+        <div class="btn-logout" @click="handleLogout">退出</div>
       </div>
     </scroll>
   </div>
@@ -18,39 +18,34 @@ import Header from '@/components/header';
 
 export default {
   name: 'Mine',
+  components: { Header },
   computed: {
     _user() {
       return this.$store.state.userInfo;
     }
   },
   methods: {
-    handlerLogout() {
+    handleLogout() {
       this.$confirm({
         msg: '你确定要退出登录吗？',
         confirm: () => {
-          // 为了避免因为路由守卫执行导致路由不跳转，加延迟以解决此bug
-          this.$nextTick(() => {
-            this.$store.commit('$handlerLogin', { isLogin: 0, userInfo: {} });
-            this.$router.push({ name: 'home' });
-          });
+          this.$store.commit('$handleLogin', { isLogin: 0, userInfo: {} });
+          this.$router.push({ name: 'home' });
         }
       });
     }
-  },
-  components: { Header }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .mine-wrap {
-  .bottom {
-    bottom: 50px;
-  }
+  height: 100vh;
+  font-size: 14px;
+  color: $fs333;
   .user-box {
     @include fcol(flex-start);
     padding: 30px 0 20px;
-    font-size: 14px;
-    color: $fs999;
     .avatar-box {
       width: 60px;
       height: 60px;
@@ -64,10 +59,8 @@ export default {
       }
     }
     .name {
-      @include frow(center, stretch);
-      width: 100%;
+      @include frow();
       margin-top: 10px;
-      color: $fs333;
     }
     .btn-logout {
       @include frow();

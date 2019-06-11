@@ -13,8 +13,7 @@ function showConfirm(config = {}) {
           title: '提示',
           cancelText: '取消',
           confirmText: '确定',
-          msg: '提示内容',
-          isShow: true,
+          msg: '',
           cancel() {},
           confirm() {}
         },
@@ -22,9 +21,10 @@ function showConfirm(config = {}) {
       };
     },
     methods: {
-      handlerClose(type = 'cancel') {
-        this.isShow = false;
-        type === 'cancel' ? this.cancel() : this.confirm();
+      handleClose(type = 'cancel') {
+        this.msg = '';
+        // 使用setTimeout为了解决路由拦截bug
+        type === 'cancel' ? this.cancel() : setTimeout(this.confirm, 30);
       }
     }
   });

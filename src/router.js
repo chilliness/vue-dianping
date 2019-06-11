@@ -1,68 +1,63 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import session from '@/utils/storage';
-import Home from '@/pages/home';
-import Address from '@/pages/address';
-import Search from '@/pages/search';
-import Login from '@/pages/login';
-import Detail from '@/pages/detail';
-import Cart from '@/pages/cart';
-import Collect from '@/pages/collect';
-import Payment from '@/pages/payment';
-import Mine from '@/pages/mine';
 
 Vue.use(Router);
 
 const router = new Router({
   routes: [
     {
-      path: '/home',
+      path: '/(home)?',
       name: 'home',
-      component: Home
+      component: () => import('@/pages/home')
     },
     {
       path: '/address',
       name: 'address',
-      component: Address
+      component: () => import('@/pages/address')
     },
     {
       path: '/search',
       name: 'search',
-      component: Search
+      component: () => import('@/pages/search')
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: () => import('@/pages/login')
     },
     {
       path: '/detail/:id',
       name: 'detail',
-      component: Detail
+      component: () => import('@/pages/detail')
     },
     {
       path: '/cart',
       name: 'cart',
-      component: Cart
+      component: () => import('@/pages/cart')
     },
     {
       path: '/collect',
       name: 'collect',
-      component: Collect
+      meta: { auth: true },
+      component: () => import('@/pages/collect')
     },
     {
       path: '/payment',
       name: 'payment',
-      component: Payment
+      meta: { auth: true },
+      component: () => import('@/pages/payment')
     },
     {
       path: '/mine',
       name: 'mine',
-      component: Mine
+      meta: { auth: true },
+      component: () => import('@/pages/mine')
     },
     {
       path: '*',
-      redirect: '/home'
+      name: 'notFound',
+      component: () => import('@/pages/notFound')
     }
   ]
 });
@@ -73,8 +68,8 @@ router.beforeEach((to, from, next) => {
     return next(false);
   }
   // 此处做权限拦截
-  if (['payment', 'collect', 'mine'].includes(to.name) && !session.get('isLogin', 0)) {
-    return next({ name: 'login', query: { redirect: from.path } });
+  if (to.meta.auth && !session.get('isLogin', 0)) {
+    return next({ name: 'login' });
   }
   next();
 });

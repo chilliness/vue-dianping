@@ -8,7 +8,7 @@ function showToast(config = {}) {
   const ToastDom = new ToastConstructor({
     el: document.createElement('div'),
     data() {
-      return { ...{ msg: '提示', isShow: true, callback() {} }, ...config };
+      return { ...{ msg: '', callback() {} }, ...config };
     }
   });
 
@@ -21,9 +21,9 @@ function showToast(config = {}) {
 
   ToastDom.timer = setTimeout(() => {
     clearTimeout(ToastDom.timer);
-    ToastDom.isShow = false;
+    ToastDom.msg = '';
     ToastDom.callback();
-  }, config.duration || 1.5e3);
+  }, config.duration || 1500);
 }
 
 export default function GlobalToast() {

@@ -1,10 +1,10 @@
 <template>
   <div class="header-wrap">
     <span class="btn btn-back" @click="$router.back()">
-      <i class="iconfont icon-left-arrow" />
+      <i class="iconfont icon-left-arrow"></i>
     </span>
     <span class="text">{{title}}</span>
-    <span class="btn btn-handler" v-if="btn" @click="handlerClick">{{btn}}</span>
+    <span class="btn btn-handle" v-if="btn" @click="handleClick">{{btn}}</span>
   </div>
 </template>
 
@@ -22,8 +22,8 @@ export default {
     }
   },
   methods: {
-    handlerClick() {
-      this.$emit('handlerClick');
+    handleClick() {
+      this.$emit('handleClick');
     }
   }
 };
@@ -31,12 +31,9 @@ export default {
 
 <style lang="scss" scoped>
 .header-wrap {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  height: 50px;
+  position: relative;
   @include frow();
+  height: 50px;
   font-size: 16px;
   color: $fswhite;
   background: $bgf33;
@@ -53,7 +50,7 @@ export default {
       font-size: 20px;
     }
   }
-  .btn-handler {
+  .btn-handle {
     right: 0;
     padding: 0 15px;
   }

@@ -52,7 +52,8 @@ pre {
   word-break: break-all;
 }
 button,
-input {
+input,
+textarea {
   outline: 0 none;
   border: 0 none;
   border-radius: 0;
@@ -60,7 +61,6 @@ input {
 }
 textarea {
   resize: none;
-  outline: 0 none;
   overflow: auto;
 }
 table {

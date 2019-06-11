@@ -1,11 +1,11 @@
 <template>
   <div class="nav-wrap">
-    <div class="item-box" v-for="(item, index) in nav" :key="index">
-      <router-link class="_box" tag="div" :to="{name: item.name}" @click.native="handlerLink(item.name)">
+    <div class="nav-box" :class="{active: item.name === $route.name}" v-for="(item, index) in nav" :key="index" @click="handleLink(item.name)">
+      <div class="item-box">
         <i class="num" v-if="item.name === 'cart' && _num > 0">{{_num}}</i>
         <i :class="['iconfont', item.icon]"></i>
         <span class="text">{{item.text}}</span>
-      </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -31,9 +31,11 @@ export default {
     }
   },
   methods: {
-    handlerLink(name) {
-      name === 'cart' &&
-        this.$store.commit('$handlerToggleChecked', { checked: 1 });
+    handleLink(name) {
+      if (name === 'cart') {
+        this.$store.commit('$handleToggleChecked', { checked: 1 });
+      }
+      this.$router.push({ name });
     }
   }
 };
@@ -58,21 +60,18 @@ export default {
     right: 0;
     border-top: 1px solid $bdeee;
   }
-  .item-box {
+  .nav-box {
     @include frow();
     flex: 1;
     height: 100%;
-    ._box {
+    &.active {
+      color: $fsf33;
+    }
+    .item-box {
       position: relative;
       @include fcol();
       width: 50px;
       height: 100%;
-      &.router-link-active {
-        .iconfont,
-        .text {
-          color: $fsf33;
-        }
-      }
       .num {
         position: absolute;
         top: 5px;

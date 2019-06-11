@@ -7,13 +7,13 @@
       </span>
       <div class="search-box">
         <i class="iconfont icon-search"></i>
-        <input class="search" type="text" v-model.trim="keyword" placeholder="请输入关键字" @keyup.enter="handlerSearch">
+        <input class="search" type="text" v-model.trim="form.keyword" placeholder="请输入关键字" @keyup.enter="handleSearch">
       </div>
       <span class="btn-search" @click="$router.push({name: isLogin ? 'collect' : 'login'})">
         <i :class="['iconfont', isLogin ? 'icon-star' : 'icon-login']"></i>
       </span>
     </div>
-    <Scroll class="bottom" :data="list" :isHasMore="isHasMore" pullUpLoad @load="handlerFetchData" ref="scroll">
+    <Scroll isBottom pullUpLoad :data="form.list" :isHasMore="isHasMore" @load="handleFetchData" ref="scroll">
       <!-- 轮播图 -->
       <Slider>
         <div class="slider-box" v-for="(item, index) in nav.menus" :key="index">
@@ -41,7 +41,7 @@
         </div>
       </div>
       <!-- 热门商品 -->
-      <Item :list="list" title="热门商品"></Item>
+      <Item :list="form.list" title="热门商品"></Item>
     </Scroll>
   </div>
 </template>
@@ -53,6 +53,7 @@ import Item from '@/components/item';
 
 export default {
   name: 'Home',
+  components: { Slider, Item },
   data() {
     return {
       nav: {
@@ -223,66 +224,65 @@ export default {
           }
         ]
       },
-      list: [],
-      keyword: '',
+      form: {
+        keyword: '',
+        list: [],
+        page: 1
+      },
       isAjax: false,
-      isHasMore: true,
-      page: 1
+      isHasMore: true
     };
   },
   computed: mapState(['nowAddress', 'isLogin']),
-  mounted() {
-    this.handlerFetchData();
-  },
   activated() {
-    // 解决搜索回来页面不能立即滚动bug
-    this.list.length &&
-      this.$refs.scroll.scroll &&
-      this.$refs.scroll.scroll.refresh();
+    // 解决搜索回来页面不能滚动bug
+    this.$refs.scroll && this.$refs.scroll.handleRefresh();
+  },
+  mounted() {
+    this.handleFetchData();
   },
   methods: {
-    async handlerFetchData() {
+    handleSearch() {
+      if (!this.form.keyword) {
+        return this.$toast({ msg: '关键字不能为空' });
+      }
+      this.$router.push({
+        name: 'search',
+        query: { word: this.form.keyword, time: +new Date() }
+      });
+    },
+    async handleFetchData() {
       if (!this.isHasMore || this.isAjax) {
         return;
       }
 
       try {
         this.isAjax = true;
-        let res = await this.$http.get(`${this.$api.list}?page=${this.page}`);
+        let res = await this.$http({
+          url: `${this.$api.list}?page=${this.form.page}`
+        });
         this.isAjax = false;
+
         if (res.code === 200) {
-          this.list = [...this.list, ...res.data];
+          this.form.list.push(...res.data);
           // 大于4，则没有更多数据了
-          this.isHasMore = ++this.page < 5;
+          this.isHasMore = ++this.form.page < 5;
         } else {
           this.$toast({ msg: res.msg });
         }
       } catch (e) {
         this.isAjax = false;
-        this.$toast({ msg: '网络开小差，请重试' });
+        this.$toast({ msg: this.$api.msg });
       }
-    },
-    handlerSearch() {
-      if (!this.keyword) {
-        return this.$toast({ msg: '关键字不能为空' });
-      }
-      this.$router.push({ name: 'search', query: { word: this.keyword } });
     }
-  },
-  components: { Slider, Item }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .home-wrap {
-  .bottom {
-    bottom: 50px;
-  }
+  height: 100vh;
   .header-bar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
     @include frow(space-between);
     height: 50px;
     font-size: 16px;

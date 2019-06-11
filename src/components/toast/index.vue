@@ -1,5 +1,5 @@
 <template>
-  <div class="toast-wrap" v-if="isShow">
+  <div class="toast-wrap" v-if="msg">
     <div class="text">{{msg}}</div>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 9;
+  z-index: 999;
   @include frow();
   .text {
     max-width: 200px;

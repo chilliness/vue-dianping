@@ -6,8 +6,8 @@
       <div class="hot-address">
         <h2 class="title">热门城市</h2>
         <ul class="list-box">
-          <li class="item-box" v-for="(item, index) in address" :key="index" @click="$store.commit('$handlerAddress', item)">
-            <span class="text">{{item}}</span>
+          <li class="item-box" v-for="(item, index) in address" :key="index">
+            <span class="text" :class="{active: _nowAddress === item}" @click="$store.commit('$handleAddress', item)">{{item}}</span>
           </li>
         </ul>
       </div>
@@ -20,36 +20,25 @@ import Header from '@/components/header';
 
 export default {
   name: 'Address',
+  components: { Header },
   data() {
     return {
-      address: [
-        '北京',
-        '上海',
-        '杭州',
-        '广州',
-        '苏州',
-        '深圳',
-        '南京',
-        '天津',
-        '重庆',
-        '厦门',
-        '武汉',
-        '西安'
-      ]
+      address: ['北京', '上海', '广州', '深圳', '武汉', '西安']
     };
   },
   computed: {
     _nowAddress() {
       return this.$store.state.nowAddress;
     }
-  },
-  components: { Header }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .address-wrap {
+  height: 100vh;
   color: $fs333;
+  font-size: 14px;
   .now-address {
     @include frow();
     height: 100px;
@@ -57,7 +46,6 @@ export default {
   }
   .hot-address {
     padding: 15px 30px;
-    font-size: 14px;
     border-top: 1px solid $bdeee;
     .title {
       font-size: 14px;
@@ -76,6 +64,9 @@ export default {
           @include frow();
           height: 35px;
           border: 1px solid $bdeee;
+          &.active {
+            background: $bgeee;
+          }
         }
       }
     }

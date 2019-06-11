@@ -87,7 +87,7 @@ export default {
           height: 30px;
           line-height: 1.2;
           text-align: justify;
-          color: $fs666;
+          color: $fs999;
           overflow: hidden;
         }
         .bottom-box {
@@ -102,7 +102,7 @@ export default {
             .old-price {
               margin-left: 8px;
               text-decoration: line-through;
-              color: $fs666;
+              color: $fs999;
             }
           }
           .sales {

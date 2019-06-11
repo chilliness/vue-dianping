@@ -6,7 +6,7 @@
           <img class="img" :src="item.imgUrl" :alt="item.name">
         </div>
         <div class="intr-box">
-          <div class="btn-del" v-if="isShowDel" @click.stop="handlerDel(item)">删除</div>
+          <div class="btn-del" v-if="isShowDel" @click.stop="handleDel(item)">删除</div>
           <h2 class="goods-name">{{item.name}}</h2>
           <div class="other-box">
             <Star :score="item.star"></Star>
@@ -30,6 +30,7 @@ import Star from '@/components/star';
 
 export default {
   name: 'Item2',
+  components: { Star },
   props: {
     list: {
       type: Array,
@@ -43,14 +44,13 @@ export default {
     }
   },
   methods: {
-    handlerDel(goods) {
+    handleDel(goods) {
       this.$confirm({
         msg: '你确定要删除该商品吗？',
-        confirm: () => this.$store.commit('$handlerCollect', goods)
+        confirm: () => this.$store.commit('$handleCollect', goods)
       });
     }
-  },
-  components: { Star }
+  }
 };
 </script>
 
