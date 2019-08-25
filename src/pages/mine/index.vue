@@ -4,7 +4,7 @@
     <scroll isBottom :data="[_user]">
       <div class="user-box">
         <div class="avatar-box">
-          <img class="avatar" :src="_user.avatar" alt="头像">
+          <img class="avatar" :src="_user.avatar" alt="头像" />
         </div>
         <div class="name">{{_user.name}}</div>
         <div class="btn-logout" @click="handleLogout">退出</div>
@@ -14,11 +14,8 @@
 </template>
 
 <script>
-import Header from '@/components/header';
-
 export default {
   name: 'Mine',
-  components: { Header },
   computed: {
     _user() {
       return this.$store.state.userInfo;

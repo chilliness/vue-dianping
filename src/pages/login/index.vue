@@ -4,16 +4,16 @@
     <Scroll :data="['shaw']" v-if="!isAjax">
       <div class="form-box" :class="{shake: isError}">
         <div class="avatar-box">
-          <img class="avatar" :src="user.avatar" alt="头像">
+          <img class="avatar" :src="user.avatar" alt="头像" />
         </div>
         <div class="name">{{user.name}}</div>
         <div class="input-box">
           <i class="iconfont icon-username"></i>
-          <input class="input" type="text" v-model.trim="form.username" placeholder="请输入用户名" @click.stop>
+          <input class="input" type="text" v-model.trim="form.username" placeholder="请输入用户名" @click.stop />
         </div>
         <div class="input-box">
           <i class="iconfont icon-password"></i>
-          <input class="input" type="password" v-model.trim="form.password" placeholder="请输入密码" @click.stop @keyup.enter="handleLogin">
+          <input class="input" type="password" v-model.trim="form.password" placeholder="请输入密码" @click.stop @keyup.enter="handleLogin" />
         </div>
         <div class="btn-login" @click="handleLogin">登录</div>
       </div>
@@ -26,12 +26,11 @@
 </template>
 
 <script>
-import Header from '@/components/header';
-import Loading from '@/components/loading';
+import { Loading } from '@/components';
 
 export default {
   name: 'Login',
-  components: { Header, Loading },
+  components: { Loading },
   data() {
     return {
       form: {

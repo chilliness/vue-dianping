@@ -1,5 +1,5 @@
 <template>
-  <div class="confirm-wrap" v-if="msg">
+  <div class="confirm-wrap">
     <div class="box">
       <div class="title">{{title}}</div>
       <div class="text">{{msg}}</div>

@@ -1,12 +1,12 @@
 <template>
   <div class="nav-wrap">
-    <div class="nav-box" :class="{active: item.name === $route.name}" v-for="(item, index) in nav" :key="index" @click="handleLink(item.name)">
+    <router-link class="nav-box" activeClass="active" :to="item.url" @click.native="handleLink(item)" v-for="(item, index) in nav" :key="index">
       <div class="item-box">
-        <i class="num" v-if="item.name === 'cart' && _num > 0">{{_num}}</i>
+        <i class="num" v-if="item.url === '/cart' && _num > 0">{{_num}}</i>
         <i :class="['iconfont', item.icon]"></i>
         <span class="text">{{item.text}}</span>
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
 
@@ -16,26 +16,25 @@ export default {
   data() {
     return {
       nav: [
-        { name: 'home', icon: 'icon-home', text: '首页' },
-        { name: 'cart', icon: 'icon-cart', text: '购物车' },
-        { name: 'mine', icon: 'icon-mine', text: '我的' }
+        { url: '/home', text: '首页', icon: 'icon-home' },
+        { url: '/cart', text: '购物车', icon: 'icon-cart' },
+        { url: '/mine', text: '我的', icon: 'icon-mine' }
       ]
     };
   },
   computed: {
     _num() {
       return this.$store.state.cartList.reduce(
-        (sum, current) => sum + current.cartNum,
+        (sum, item) => sum + item.cartNum,
         0
       );
     }
   },
   methods: {
-    handleLink(name) {
-      if (name === 'cart') {
+    handleLink({ url }) {
+      if (url === '/cart') {
         this.$store.commit('$handleToggleChecked', { checked: 1 });
       }
-      this.$router.push({ name });
     }
   }
 };

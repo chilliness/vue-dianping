@@ -16,11 +16,8 @@
 </template>
 
 <script>
-import Header from '@/components/header';
-
 export default {
   name: 'Address',
-  components: { Header },
   data() {
     return {
       address: ['北京', '上海', '广州', '深圳', '武汉', '西安']

@@ -4,7 +4,7 @@
     <!-- 主体内容 -->
     <template v-if="_list.length">
       <Scroll isBottom :data="_list">
-        <Item3 :list="_list"></Item3>
+        <Item :list="_list" isCart></Item>
       </Scroll>
       <div class="balance-box" v-if="_list.length">
         <div class="left" @click="$store.commit('$handleToggleChecked', {checked: +!_allChecked})">
@@ -22,12 +22,11 @@
 </template>
 
 <script>
-import Header from '@/components/header';
-import Item3 from '@/components/item3';
+import { Item } from '@/components';
 
 export default {
   name: 'Cart',
-  components: { Header, Item3 },
+  components: { Item },
   data() {
     return { isEdit: false };
   },

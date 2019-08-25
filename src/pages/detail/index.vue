@@ -7,10 +7,10 @@
     </template>
     <!-- 主体内容 -->
     <template v-else>
-      <Scroll isBottom :data="[goods]">
+      <Scroll :data="[goods]" isBottom>
         <div class="goods-box">
           <div class="img-box">
-            <img class="img" :src="goods.imgUrl" :alt="goods.name">
+            <img class="img" :src="goods.imgUrl" :alt="goods.name" />
           </div>
           <div class="intr-box">
             <h2 class="name">{{goods.name}}</h2>
@@ -34,11 +34,11 @@
             <span class="text">{{goods.store.address}}</span>
           </li>
           <li class="item-box">
-            <i class="iconfont icon-time"/>
+            <i class="iconfont icon-time" />
             <span class="text">{{'营业时间' + goods.store.businessHours}}</span>
           </li>
           <li class="item-box">
-            <i class="iconfont icon-tel"/>
+            <i class="iconfont icon-tel" />
             <span class="text">{{goods.store.tel}}</span>
           </li>
         </ul>
@@ -54,7 +54,7 @@
           <li class="no-comments" v-else>此商品暂无评论</li>
           <li class="item-box" v-for="(item, index) in goods.comments.slice(0, 3)" :key="index">
             <div class="avatar-box">
-              <img class="avatar" :src="item.avatar" :alt="item.name">
+              <img class="avatar" :src="item.avatar" :alt="item.name" />
             </div>
             <div class="content-box">
               <div class="username">{{item.name}}</div>
@@ -62,10 +62,10 @@
                 <Star :score="item.star"></Star>
               </div>
               <p class="text">{{item.text}}</p>
-              <div class="pic-bar" v-if="item.pics.length" ref="scrollX">
+              <div class="pic-bar" v-if="item.pics.length" ref="picBar">
                 <ul class="pic-list">
                   <li class="pic-box" v-for="(_item, _index) in item.pics" :key="_index">
-                    <img class="pic" :src="_item" alt>
+                    <img class="pic" :src="_item" alt />
                   </li>
                 </ul>
               </div>
@@ -84,13 +84,11 @@
 </template>
 
 <script>
-import Header from '@/components/header';
-import Star from '@/components/star';
-import Loading from '@/components/loading';
+import { Star, Loading } from '@/components';
 
 export default {
   name: 'Detail',
-  components: { Header, Star, Loading },
+  components: { Star, Loading },
   data() {
     return {
       id: 0,
@@ -139,27 +137,19 @@ export default {
         this.isAjax = false;
 
         if (res.code === 200) {
-          let food = res.data.find(item => item.id === this.id);
-
-          if (!food) {
-            return this.$router.replace({ path: '/404' });
-          }
-
-          this.goods = food;
+          this.goods = res.data.find(item => item.id === this.id);
 
           // 延迟以确保dom渲染完毕
-          clearTimeout(this.timer);
-          this.timer = setTimeout(() => {
-            let aList = this.$refs.scrollX || [];
-            clearTimeout(this.timer);
-
-            aList.forEach(item => {
-              item._scrollX = new this.$BScroll(item, {
-                scrollX: true,
-                scrollY: false
-              });
-            });
-          }, 100);
+          setTimeout(() => {
+            let list = this.$refs.picBar || [];
+            list.forEach(
+              item =>
+                new this.$BScroll(item, {
+                  scrollX: true,
+                  scrollY: false
+                })
+            );
+          }, 60);
         } else {
           this.$toast({ msg: res.msg });
         }
@@ -174,7 +164,7 @@ export default {
       handler(val) {
         Object.assign(this.$data, this.$options.data());
         // +的作用是隐式转化
-        this.id = +this.$route.params.id;
+        this.id = +val.params.id;
         this.handleFetchData();
       },
       immediate: true,

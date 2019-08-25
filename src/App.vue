@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Nav from '@/components/nav';
+import { Nav } from '@/components';
 
 export default {
   name: 'App',
@@ -18,6 +18,17 @@ export default {
       let arr = ['home', 'mine'];
       !this.$store.state.cartList.length && arr.push('cart');
       return arr.includes(this.$route.name);
+    }
+  },
+  watch: {
+    $route: {
+      handler() {
+        document
+          .querySelectorAll('.confirm-wrap')
+          .forEach(item => document.body.removeChild(item));
+      },
+      immediate: true,
+      deep: true
     }
   }
 };

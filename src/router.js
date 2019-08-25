@@ -1,15 +1,16 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import session from '@/utils/storage';
+import Home from '@/pages/home';
 
 Vue.use(Router);
 
 const router = new Router({
   routes: [
     {
-      path: '/(home)?',
+      path: '/home',
       name: 'home',
-      component: () => import('@/pages/home')
+      component: Home
     },
     {
       path: '/address',
@@ -56,17 +57,12 @@ const router = new Router({
     },
     {
       path: '*',
-      name: 'notFound',
-      component: () => import('@/pages/notFound')
+      redirect: '/home'
     }
   ]
 });
 
 router.beforeEach((to, from, next) => {
-  // 解决路由切换confirm组件仍然显示bug
-  if (to.path !== from.path && document.querySelector('.confirm-wrap')) {
-    return next(false);
-  }
   // 此处做权限拦截
   if (to.meta.auth && !session.get('isLogin', 0)) {
     return next({ name: 'login' });

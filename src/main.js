@@ -6,15 +6,14 @@ import router from './router';
 import store from './store';
 import api from './utils/api';
 import sesstion from './utils/storage';
-import Scroll from './components/scroll';
-import GlobalToast from './components/toast';
-import GlobalConfirm from './components/confirm';
+import { Header, Scroll, Toast, Confirm } from './components';
 import './common/scss/index.scss';
 
 Vue.config.productionTip = false;
+Vue.use(Header);
 Vue.use(Scroll);
-Vue.use(GlobalToast);
-Vue.use(GlobalConfirm);
+Vue.use(Toast);
+Vue.use(Confirm);
 // axios响应拦截器
 axios.interceptors.response.use(res => res.data);
 Vue.prototype.$http = axios;

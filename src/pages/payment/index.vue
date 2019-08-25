@@ -6,7 +6,7 @@
         <div class="list-box">
           <div class="item-box" v-for="(item, index) in password" :key="index">●</div>
         </div>
-        <div class="tip-box">{{'默认支付密码为' + text}}</div>
+        <div class="hint">{{'默认支付密码为' + text}}</div>
       </div>
     </Scroll>
     <div class="keyboard-box" v-if="isShow" @click.stop>
@@ -16,11 +16,8 @@
 </template>
 
 <script>
-import Header from '@/components/header';
-
 export default {
   name: 'Payment',
-  components: { Header },
   data() {
     return {
       password: [],
@@ -120,7 +117,7 @@ export default {
         height: 100%;
       }
     }
-    .tip-box {
+    .hint {
       text-align: center;
       padding: 15px;
     }

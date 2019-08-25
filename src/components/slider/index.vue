@@ -1,14 +1,14 @@
 <template>
   <div class="slider-wrap">
-    <div class="slider-outer" @touchstart="handleTouchstart" @touchmove.stop="handleTouchmove" @touchend="handleTouchend" @transitionend="handleTransitionend" ref="slider">
+    <div class="slider-outer" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd" @transitionend="handleTransitionEnd" ref="slider">
       <slot>
-        <div class="_item" v-for="(item, index) in num" :key="index">
+        <div class="_item" v-for="(item, index) in [1, 2, 3]" :key="index">
           <div style="width: 100vw; height: 100%;">{{item}}</div>
         </div>
       </slot>
     </div>
-    <div class="dot-box" v-if="num > 1">
-      <i class="item" :class="{active: item === curIndex}" v-for="(item, index) in num" :key="index"></i>
+    <div class="dot-box">
+      <i class="item" :class="{active: item === nowIndex}" v-for="(item, index) in list" :key="index"></i>
     </div>
   </div>
 </template>
@@ -30,22 +30,25 @@ export default {
   },
   data() {
     return {
-      num: 3,
-      curIndex: 1,
+      list: [],
+      nowIndex: 1,
       isCanTouch: true,
       startX: 0,
       diffX: 0
     };
   },
-  activated() {
-    // 解决在keep-alive因定时间导致无法保存位置bug
-    this.handlePlay();
-  },
   mounted() {
     this.handleInit();
   },
+  activated() {
+    // 解决在keep-alive导致的bug
+    this.handlePlay();
+  },
   deactivated() {
-    clearInterval(this.timer);
+    clearInterval(this.timerPlay);
+  },
+  beforeDestory() {
+    clearInterval(this.timerPlay);
   },
   methods: {
     handleInit() {
@@ -56,6 +59,8 @@ export default {
       if (length < 2) {
         return;
       }
+
+      this.list = [...''.padStart(length)].map((v, i) => i + 1);
 
       oSlider.insertBefore(
         oSlider.children[length - 1].cloneNode(true),
@@ -68,20 +73,20 @@ export default {
       this.handlePlay();
     },
     handlePlay() {
-      if (this.autoplay) {
-        clearInterval(this.timer);
-        this.timer = setInterval(() => {
+      if (this.autoplay && length > 1) {
+        clearInterval(this.timerPlay);
+        this.timerPlay = setInterval(() => {
           which = Math.min(length - 1, ++which);
           oSlider.style.cssText = `transform: translate3d(${which *
             -100}vw, 0, 0); transition: transform 0.2s;`;
         }, this.interval);
       }
     },
-    handleTouchstart(e) {
+    handleTouchStart(e) {
       if (!this.isCanTouch || length < 2) {
         return;
       }
-      clearInterval(this.timer);
+      clearInterval(this.timerPlay);
       this.startX = e.changedTouches[0].clientX;
       which = parseInt(
         Math.abs(oSlider.getBoundingClientRect().left) /
@@ -89,16 +94,15 @@ export default {
         10
       );
     },
-    handleTouchmove(e) {
+    handleTouchMove(e) {
       if (!this.isCanTouch || length < 2) {
         return;
       }
-      e.stopPropagation();
       this.diffX = e.changedTouches[0].clientX - this.startX;
       oSlider.style.cssText = `transform: translate3d(${which * -width +
         this.diffX}px, 0, 0)`;
     },
-    handleTouchend(e) {
+    handleTouchEnd(e) {
       if (length < 2) {
         return;
       }
@@ -116,14 +120,14 @@ export default {
           -100}vw, 0, 0); transition: transform 0.2s;`;
       }
     },
-    handleTransitionend() {
+    handleTransitionEnd() {
       if ([0, length - 1].includes(which)) {
         which = !which ? length - 2 : 1;
         oSlider.style.cssText = `transform: translate3d(${which *
           -100}vw, 0, 0)`;
       }
       this.isCanTouch = true;
-      this.curIndex = which;
+      this.nowIndex = which;
     }
   }
 };

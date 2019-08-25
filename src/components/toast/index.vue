@@ -1,5 +1,5 @@
 <template>
-  <div class="toast-wrap" v-if="msg">
+  <div class="toast-wrap">
     <div class="text">{{msg}}</div>
   </div>
 </template>

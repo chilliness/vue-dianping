@@ -2,41 +2,30 @@ import Vue from 'vue';
 import index from './index.vue';
 
 // 此处会返回一个扩展实例的构造函器
-const ConfirmConstructor = Vue.extend(index);
+let ConfirmConstructor = Vue.extend(index);
 
-function showConfirm(config = {}) {
-  const ConfirmDom = new ConfirmConstructor({
+function showConfirm({ title = '提示', msg = '', cancelText = '取消', confirmText = '确定', cancel = () => {}, confirm = () => {} }) {
+  let oConfirm = new ConfirmConstructor({
     el: document.createElement('div'),
     data() {
       return {
-        ...{
-          title: '提示',
-          cancelText: '取消',
-          confirmText: '确定',
-          msg: '',
-          cancel() {},
-          confirm() {}
-        },
-        ...config
+        title,
+        msg,
+        cancelText,
+        confirmText
       };
     },
     methods: {
-      handleClose(type = 'cancel') {
-        this.msg = '';
-        // 使用setTimeout为了解决路由拦截bug
-        type === 'cancel' ? this.cancel() : setTimeout(this.confirm, 30);
+      handleClose(type) {
+        document.body.removeChild(oConfirm.$el);
+        type === 'cancel' ? cancel() : confirm();
       }
     }
   });
 
-  // 防止页面出现重复添加
-  if (document.querySelector('.confirm-wrap')) {
-    return;
-  }
-
-  document.body.appendChild(ConfirmDom.$el);
+  document.body.appendChild(oConfirm.$el);
 }
 
-export default function GlobalConfirm() {
+export default function $confirm() {
   Vue.prototype.$confirm = showConfirm;
 }

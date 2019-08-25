@@ -6,31 +6,30 @@
       </span>
       <div class="search-box">
         <i class="iconfont icon-search"></i>
-        <input class="search" type="text" v-model.trim="keyword" placeholder="请输入关键字" @keyup.enter="handleSearch">
+        <input class="search" type="text" v-model.trim="keyword" placeholder="请输入关键字" @keyup.enter="handleSearch" />
       </div>
       <span class="btn-search" @click="handleSearch">搜索</span>
     </div>
     <template v-if="isAjax">
-      <div class="tip-box">正在搜索，请稍候</div>
+      <div class="hint">正在搜索，请稍候</div>
       <Loading></Loading>
     </template>
     <!-- 主体部分 -->
     <template v-else>
       <Scroll :data="list" :isHasMore="false" pullUpLoad v-if="list.length">
-        <Item2 :list="list"></Item2>
+        <Item :list="list"></Item>
       </Scroll>
-      <div class="tip-box" v-else>没有找到匹配的商品</div>
+      <div class="hint" v-else>没有找到匹配的商品</div>
     </template>
   </div>
 </template>
 
 <script>
-import Item2 from '@/components/item2';
-import Loading from '@/components/loading';
+import { Item, Loading } from '@/components';
 
 export default {
   name: 'Search',
-  components: { Item2, Loading },
+  components: { Item, Loading },
   data() {
     return {
       keyword: '',
@@ -135,7 +134,7 @@ export default {
       }
     }
   }
-  .tip-box {
+  .hint {
     @include frow();
     height: 100px;
   }

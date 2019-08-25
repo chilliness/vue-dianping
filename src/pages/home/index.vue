@@ -7,7 +7,7 @@
       </span>
       <div class="search-box">
         <i class="iconfont icon-search"></i>
-        <input class="search" type="text" v-model.trim="form.keyword" placeholder="请输入关键字" @keyup.enter="handleSearch">
+        <input class="search" type="text" v-model.trim="form.keyword" placeholder="请输入关键字" @keyup.enter="handleSearch" />
       </div>
       <span class="btn-search" @click="$router.push({name: isLogin ? 'collect' : 'login'})">
         <i :class="['iconfont', isLogin ? 'icon-star' : 'icon-login']"></i>
@@ -20,7 +20,7 @@
           <div class="item-list">
             <div class="item-box" v-for="(_item, _index) in item" :key="_index">
               <div class="img-box">
-                <img class="img" :src="_item.imgUrl" :alt="_item.text">
+                <img class="img" :src="_item.imgUrl" :alt="_item.text" />
               </div>
               <div class="text">{{_item.text}}</div>
             </div>
@@ -35,21 +35,23 @@
             <div class="caption" :style="item.color">{{item.title}}</div>
             <div class="sub-caption">{{item.subTitle}}</div>
             <div class="img-box">
-              <img class="img" :src="item.imgUrl" :alt="item.title">
+              <img class="img" :src="item.imgUrl" :alt="item.title" />
             </div>
           </div>
         </div>
       </div>
       <!-- 热门商品 -->
-      <Item :list="form.list" title="热门商品"></Item>
+      <div class="hot-box">
+        <h2 class="title">热门商品</h2>
+        <Item :list="form.list" isHome></Item>
+      </div>
     </Scroll>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import Slider from '@/components/slider';
-import Item from '@/components/item';
+import { Slider, Item } from '@/components';
 
 export default {
   name: 'Home',
@@ -230,16 +232,18 @@ export default {
         page: 1
       },
       isAjax: false,
-      isHasMore: true
+      isHasMore: true,
+      isFirst: true
     };
   },
   computed: mapState(['nowAddress', 'isLogin']),
   activated() {
+    if (this.isFirst) {
+      this.isFirst = false;
+      this.handleFetchData();
+    }
     // 解决搜索回来页面不能滚动bug
     this.$refs.scroll && this.$refs.scroll.handleRefresh();
-  },
-  mounted() {
-    this.handleFetchData();
   },
   methods: {
     handleSearch() {
@@ -333,7 +337,7 @@ export default {
   }
   .slider-box {
     font-size: 12px;
-    padding: 23px 15px 25px;
+    padding: 25px 15px;
     .item-list {
       display: flex;
       flex-wrap: wrap;
@@ -401,6 +405,15 @@ export default {
           }
         }
       }
+    }
+  }
+  .hot-box {
+    .title {
+      @include frow();
+      height: 40px;
+      font-size: 14px;
+      color: $fs333;
+      background: $bgeee;
     }
   }
 }
