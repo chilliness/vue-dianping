@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$emit('handleClick');
+      this.$emit('emitClick');
     }
   }
 };

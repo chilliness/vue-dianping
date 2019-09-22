@@ -6,7 +6,7 @@
       </span>
       <div class="search-box">
         <i class="iconfont icon-search"></i>
-        <input class="search" type="text" v-model.trim="keyword" placeholder="请输入关键字" @keyup.enter="handleSearch" />
+        <input class="search" type="text" v-model="keyword" placeholder="请输入关键字" @keyup="handleSearch($event)" />
       </div>
       <span class="btn-search" @click="handleSearch">搜索</span>
     </div>
@@ -38,15 +38,6 @@ export default {
     };
   },
   methods: {
-    handleSearch() {
-      if (!this.keyword) {
-        return this.$toast({ msg: '关键字不能为空' });
-      }
-      this.$router.replace({
-        name: 'search',
-        query: { word: this.keyword, time: +new Date() }
-      });
-    },
     async handleFetchData() {
       if (this.isAjax) {
         return;
@@ -67,6 +58,21 @@ export default {
         this.isAjax = false;
         this.$toast({ msg: this.$api.msg });
       }
+    },
+    handleSearch(e) {
+      if (e.keyCode !== 13) {
+        return;
+      }
+
+      let word = this.form.keyword.trim();
+
+      if (!word) {
+        return this.$toast({ msg: '关键字不能为空' });
+      }
+      this.$router.replace({
+        name: 'search',
+        query: { word, time: +new Date() }
+      });
     }
   },
   watch: {

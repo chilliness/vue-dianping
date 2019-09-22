@@ -1,6 +1,6 @@
 <template>
   <div class="cart-wrap">
-    <Header title="购物车" :btn="_btn" @handleClick="isEdit = !isEdit"></Header>
+    <Header title="购物车" :btn="_btn" @emitClick="isEdit = !isEdit"></Header>
     <!-- 主体内容 -->
     <template v-if="_list.length">
       <Scroll isBottom :data="_list">

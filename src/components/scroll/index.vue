@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-wrap" :class="{bottom: isBottom}" ref="scrollBox">
+  <div class="scroll-wrap" :class="{bottom: isBottom}" ref="scrollWrapRef">
     <div>
       <slot></slot>
       <div class="loading-bar" v-if="pullUpLoad">
@@ -66,7 +66,7 @@ export default {
   methods: {
     handleInitScroll() {
       if (!this.scroll) {
-        this.scroll = new this.$BScroll(this.$refs.scrollBox, {
+        this.scroll = new this.$BScroll(this.$refs.scrollWrapRef, {
           click: this.click,
           probeType: this.probeType,
           observeDom: this.observeDom,
@@ -74,28 +74,34 @@ export default {
           pullUpLoad: this.pullUpLoad
         });
 
-        this.scroll.on('scroll', pos => this.$emit('scroll', pos));
+        this.scroll.on('scroll', pos => this.$emit('emitScroll', pos));
 
         if (this.pullDownRefresh) {
-          this.scroll.on('pullingDown', () => this.$emit('refresh'));
+          this.scroll.on('pullingDown', () => this.$emit('emitRefresh'));
         }
 
         if (this.pullUpLoad) {
-          this.scroll.on('pullingUp', () => this.$emit('load'));
+          this.scroll.on('pullingUp', () => this.$emit('emitLoad'));
         }
       } else {
         this.scroll.refresh();
       }
     },
     handleScrollTo() {
-      this.scroll && this.scroll.scrollTo(0, 0, 100);
+      if (this.scroll) {
+        this.scroll.scrollTo(0, 0, 100);
+      }
     },
     handleFinshPullUp() {
-      this.scroll && this.scroll.finishPullUp();
+      if (this.scroll) {
+        this.scroll.finishPullUp();
+      }
     },
     handleRefresh() {
       this.handleFinshPullUp();
-      this.scroll && this.scroll.refresh();
+      if (this.scroll) {
+        this.scroll.refresh();
+      }
     }
   },
   watch: {

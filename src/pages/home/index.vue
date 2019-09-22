@@ -7,13 +7,13 @@
       </span>
       <div class="search-box">
         <i class="iconfont icon-search"></i>
-        <input class="search" type="text" v-model.trim="form.keyword" placeholder="请输入关键字" @keyup.enter="handleSearch" />
+        <input class="search" type="text" v-model="form.keyword" placeholder="请输入关键字" @keyup="handleSearch($event)" />
       </div>
       <span class="btn-search" @click="$router.push({name: isLogin ? 'collect' : 'login'})">
         <i :class="['iconfont', isLogin ? 'icon-star' : 'icon-login']"></i>
       </span>
     </div>
-    <Scroll isBottom pullUpLoad :data="form.list" :isHasMore="isHasMore" @load="handleFetchData" ref="scroll">
+    <Scroll isBottom pullUpLoad :data="form.list" :isHasMore="form.page <= form.pageTotal" @emitLoad="handleFetchData" ref="scrollRef">
       <!-- 轮播图 -->
       <Slider>
         <div class="slider-box" v-for="(item, index) in nav.menus" :key="index">
@@ -229,10 +229,10 @@ export default {
       form: {
         keyword: '',
         list: [],
-        page: 1
+        page: 1,
+        pageTotal: 1
       },
       isAjax: false,
-      isHasMore: true,
       isFirst: true
     };
   },
@@ -243,20 +243,13 @@ export default {
       this.handleFetchData();
     }
     // 解决搜索回来页面不能滚动bug
-    this.$refs.scroll && this.$refs.scroll.handleRefresh();
+    if (this.$refs.scrollRef) {
+      this.$refs.scrollRef.handleRefresh();
+    }
   },
   methods: {
-    handleSearch() {
-      if (!this.form.keyword) {
-        return this.$toast({ msg: '关键字不能为空' });
-      }
-      this.$router.push({
-        name: 'search',
-        query: { word: this.form.keyword, time: +new Date() }
-      });
-    },
     async handleFetchData() {
-      if (!this.isHasMore || this.isAjax) {
+      if (this.isAjax || this.form.page > this.form.pageTotal) {
         return;
       }
 
@@ -268,9 +261,9 @@ export default {
         this.isAjax = false;
 
         if (res.code === 200) {
-          this.form.list.push(...res.data);
-          // 大于4，则没有更多数据了
-          this.isHasMore = ++this.form.page < 5;
+          this.form.list = [...this.form.list, ...res.data];
+          this.form.page++;
+          this.form.pageTotal = 5;
         } else {
           this.$toast({ msg: res.msg });
         }
@@ -278,6 +271,21 @@ export default {
         this.isAjax = false;
         this.$toast({ msg: this.$api.msg });
       }
+    },
+    handleSearch(e) {
+      if (e.keyCode !== 13) {
+        return;
+      }
+
+      let word = this.form.keyword.trim();
+
+      if (!word) {
+        return this.$toast({ msg: '关键字不能为空' });
+      }
+      this.$router.push({
+        name: 'search',
+        query: { word, time: +new Date() }
+      });
     }
   }
 };
@@ -336,8 +344,8 @@ export default {
     }
   }
   .slider-box {
-    font-size: 12px;
     padding: 25px 15px;
+    font-size: 12px;
     .item-list {
       display: flex;
       flex-wrap: wrap;

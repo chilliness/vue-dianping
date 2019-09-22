@@ -1,6 +1,6 @@
 <template>
   <div class="slider-wrap">
-    <div class="slider-outer" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd" @transitionend="handleTransitionEnd" ref="slider">
+    <div class="slider-outer" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd" @transitionend="handleTransitionEnd" ref="sliderOuterRef">
       <slot>
         <div class="_item" v-for="(item, index) in [1, 2, 3]" :key="index">
           <div style="width: 100vw; height: 100%;">{{item}}</div>
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     handleInit() {
-      oSlider = this.$refs.slider;
+      oSlider = this.$refs.sliderOuterRef;
       length = oSlider.children.length;
       width = oSlider.parentNode.clientWidth;
 
@@ -88,11 +88,10 @@ export default {
       }
       clearInterval(this.timerPlay);
       this.startX = e.changedTouches[0].clientX;
-      which = parseInt(
-        Math.abs(oSlider.getBoundingClientRect().left) /
-          oSlider.parentNode.clientWidth,
-        10
-      );
+      which =
+        (Math.abs(oSlider.getBoundingClientRect().left) /
+          oSlider.parentNode.clientWidth) |
+        0;
     },
     handleTouchMove(e) {
       if (!this.isCanTouch || length < 2) {

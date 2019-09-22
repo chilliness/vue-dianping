@@ -9,7 +9,7 @@
         <div class="hint">{{'默认支付密码为' + text}}</div>
       </div>
     </Scroll>
-    <div class="keyboard-box" v-if="isShow" @click.stop>
+    <div class="keyboard-box" v-if="isShow">
       <div class="item-box" :class="{disabled: item === ''}" v-for="(item, index) in _keyboard" :key="index" @click="handleInput(item)">{{item}}</div>
     </div>
   </div>

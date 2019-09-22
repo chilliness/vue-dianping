@@ -77,11 +77,12 @@ export default {
         let res = await this.$http({ url: this.$api.user });
         this.isAjax = false;
 
-        if (res.name) {
-          this.user = { avatar: res.photo, name: res.name };
-          this.form = { username: res.surname, password: res.password };
+        if (res.code === 200) {
+          res = res.data;
+          this.user = { avatar: res.avatar, name: res.username };
+          this.form = { username: res.username, password: res.password };
         } else {
-          this.$toast({ msg: '攻城狮罢工，信息生成失败' });
+          this.$toast({ msg: res.msg });
         }
       } catch (e) {
         this.isAjax = false;

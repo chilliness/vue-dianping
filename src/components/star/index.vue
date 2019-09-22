@@ -1,6 +1,6 @@
 <template>
   <div class="star-wrap">
-    <i class="iconfont icon-star" :class="{active: item <= score}" v-for="item in 5" :key="item"></i>
+    <i class="iconfont icon-star" :class="{active: item <= score}" v-for="item in [0, 1, 2, 3, 4]" :key="item"></i>
   </div>
 </template>
 

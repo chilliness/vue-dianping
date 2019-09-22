@@ -20,7 +20,7 @@
           </div>
         </div>
         <div class="intr-box2" v-else>
-          <div class="btn-del" v-if="isShowDel" @click.stop="handleDel(item)">删除</div>
+          <div class="btn-del" v-if="isShowDel" @click="handleDel(item, $event)">删除</div>
           <h2 class="goods-name">{{item.name}}</h2>
           <div class="other-box">
             <Star :score="item.star"></Star>
@@ -37,8 +37,8 @@
       </li>
     </template>
     <li class="item-box2" v-for="(item, index) in list" :key="index" @click="$router.push({name: 'detail', params: {id: item.id}})" v-else>
-      <div class="check-box" @click.stop>
-        <div class="btn-check" :class="{on: item.checked}" @click="handleToggleChecked(item)"></div>
+      <div class="check-box">
+        <div class="btn-check" :class="{on: item.checked}" @click="handleToggleChecked(item, $event)"></div>
       </div>
       <div class="img-box">
         <img class="img" :src="item.imgUrl" :alt="item.name" />
@@ -50,11 +50,11 @@
         </div>
         <div class="price">{{'￥' + item.price + '/份'}}</div>
         <div class="btn-box">
-          <span class="btn btn-sub" @click.stop="handleToggleNum({goods: item, type: 'sub'})">
+          <span class="btn btn-sub" @click="handleToggleNum({goods: item, type: 'sub'}, $event)">
             <i class="iconfont icon-sub"></i>
           </span>
           <span class="num">{{item.cartNum}}</span>
-          <span class="btn btn-add" @click.stop="handleToggleNum({goods: item, type: 'add'})">
+          <span class="btn btn-add" @click="handleToggleNum({goods: item, type: 'add'}, $event)">
             <i class="iconfont icon-add"></i>
           </span>
         </div>
@@ -90,13 +90,15 @@ export default {
     }
   },
   methods: {
-    handleDel(goods) {
+    handleDel(goods, e) {
+      e.stopPropagation();
       this.$confirm({
         msg: '你确定要删除该商品吗？',
         confirm: () => this.$store.commit('$handleCollect', goods)
       });
     },
-    handleToggleNum(obj) {
+    handleToggleNum(obj, e) {
+      e.stopPropagation();
       if (obj.type === 'sub' && obj.goods.cartNum < 2) {
         return this.$confirm({
           msg: '你确定要删除该商品吗？',
@@ -105,7 +107,8 @@ export default {
       }
       this.$store.commit('$handleCart', obj);
     },
-    handleToggleChecked(goods) {
+    handleToggleChecked(goods, e) {
+      e.stopPropagation();
       this.$store.commit('$handleToggleChecked', {
         goods,
         // +的作用是隐式类型转换

@@ -62,7 +62,7 @@
                 <Star :score="item.star"></Star>
               </div>
               <p class="text">{{item.text}}</p>
-              <div class="pic-bar" v-if="item.pics.length" ref="picBar">
+              <div class="pic-bar" v-if="item.pics.length">
                 <ul class="pic-list">
                   <li class="pic-box" v-for="(_item, _index) in item.pics" :key="_index">
                     <img class="pic" :src="_item" alt />
@@ -141,7 +141,7 @@ export default {
 
           // 延迟以确保dom渲染完毕
           setTimeout(() => {
-            let list = this.$refs.picBar || [];
+            let list = document.querySelectorAll('.pic-bar');
             list.forEach(
               item =>
                 new this.$BScroll(item, {
